@@ -1,0 +1,35 @@
+﻿<Properties StartupConfiguration="{DD83D65A-F6C5-490F-969E-21D95641636D}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DelfinAPI/Web.config">
+    <Files>
+      <File FileName="DelfinAPI/DAL/shaDAO.cs" Line="32" Column="72" />
+      <File FileName="DelfinAPI/Controllers/shaController.cs" />
+      <File FileName="packages/MySql.Data.6.8.8/readme.txt" />
+      <File FileName="DelfinAPI/Web.config" Line="15" Column="53" />
+      <File FileName="DelfinAPI/packages.config" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="DelfinAPI" expanded="True">
+            <Node name="DelfinAPI" expanded="True">
+              <Node name="References" expanded="True" />
+              <Node name="Controllers" expanded="True" />
+              <Node name="DAL" expanded="True" />
+              <Node name="Web.config" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.DelfinAPI PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/juancarlosavinaluna/Documents/ISSC/Verano/2019/identidad_digital/DelfinAPI/DelfinAPI/Controllers/shaController.cs" relfile="DelfinAPI/Controllers/shaController.cs" line="20" column="1" />
+      <Breakpoint file="/Users/juancarlosavinaluna/Documents/ISSC/Verano/2019/identidad_digital/DelfinAPI/DelfinAPI/DAL/shaDAO.cs" relfile="DelfinAPI/DAL/shaDAO.cs" line="19" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
