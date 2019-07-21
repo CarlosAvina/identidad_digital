@@ -1,7 +1,9 @@
 import 'dart:core' as prefix0;
 import 'dart:core';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 
 void main() => runApp(MyApp());
 
@@ -30,6 +32,50 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool _loginVisibility = true;
+  bool _nipVisibility = false;
+
+  getFile() async {
+    // Single file path
+    String filePath;
+    // will let you pick one file path, from all extensions
+    filePath = await FilePicker.getFilePath(type: FileType.ANY);
+    // will filter and only let you pick files with svg extension
+    filePath = await FilePicker.getFilePath(
+        type: FileType.CUSTOM, fileExtension: 'pdf');
+
+    // Pick a single file directly
+    // will return a File object directly from the selected file
+    File file = await FilePicker.getFile(type: FileType.ANY);
+  }
+
+  showAlert() {
+    return showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+            title: const Text('Dialog title'),
+            content: Text('Sample alert'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Cancel'),
+                onPressed: () => Navigator.pop(context, 'Cancel'),
+              ),
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () => Navigator.pop(context, 'OK'),
+              ),
+            ],
+          ),
+    ).then<String>((returnVal) {
+      if (returnVal != null) {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text('You clicked: $returnVal'),
+          action: SnackBarAction(label: 'OK', onPressed: () {}),
+        ));
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,58 +87,49 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               Image.asset('assets/f_logo_RGB-Blue_144.png', width: 100),
               SizedBox(height: 120),
-              Text(
-                'Inicia sesión',
-                style: TextStyle(
-                    color: Color(0xff0089FA),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
-              ),
-              SizedBox(height: 5),
-              ButtonTheme(
-                height: 50,
-                child: RaisedButton(
-                  textColor: Colors.white,
-                  color: Color(0xff0089FA),
-                  child: Text(
-                    'Certificado de identidad',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(30),
-                  ),
-                  elevation: 15,
-                  onPressed: () {
-                    showDialog<String>(
-                      context: context,
-                      builder: (BuildContext context) => AlertDialog(
-                            title: const Text('Dialog title'),
-                            content: Text('Sample alert'),
-                            actions: <Widget>[
-                              FlatButton(
-                                child: Text('Cancel'),
-                                onPressed: () =>
-                                    Navigator.pop(context, 'Cancel'),
-                              ),
-                              FlatButton(
-                                child: Text('OK'),
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                              ),
-                            ],
-                          ),
-                    ).then<String>((returnVal) {
-                      if (returnVal != null) {
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text('You clicked: $returnVal'),
-                          action: SnackBarAction(label: 'OK', onPressed: () {}),
-                        ));
-                      }
-                    });
-                  },
+              Visibility(
+                visible: _loginVisibility,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Inicia sesión',
+                      style: TextStyle(
+                          color: Color(0xff0089FA),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
+                    SizedBox(height: 5),
+                    ButtonTheme(
+                      height: 50,
+                      child: RaisedButton(
+                        textColor: Colors.white,
+                        color: Color(0xff0089FA),
+                        child: Text(
+                          'Certificado de identidad',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(30),
+                        ),
+                        elevation: 15,
+                        onPressed: () async {
+                          await getFile();
+                          setState(() {
+                            _loginVisibility = !_loginVisibility;
+                            _nipVisibility = !_nipVisibility;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              PasswordField(
-                hintText: 'NIP',
+              Visibility(
+                visible: _nipVisibility,
+                child: PasswordField(
+                  hintText: 'NIP',
+                ),
               )
             ],
           ),
