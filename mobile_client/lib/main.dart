@@ -30,6 +30,60 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool _loginVisibility = true;
+  bool _nipVisibility = false;
+
+  void showAlert(
+      String title, String content, String cancelOption, String acceptOption) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+            title: Text(title),
+            content: Text(content),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(cancelOption),
+                onPressed: () => Navigator.pop(context, cancelOption),
+              ),
+              FlatButton(
+                child: Text(acceptOption),
+                onPressed: () => Navigator.pop(context, acceptOption),
+              ),
+            ],
+          ),
+    ).then<String>((returnVal) {
+      if (returnVal != null) {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text('You clicked: $returnVal'),
+          action: SnackBarAction(label: 'OK', onPressed: () {}),
+        ));
+      }
+    });
+  }
+
+  Widget roundedButton(String title, Function func) {
+    return ButtonTheme(
+      height: 50,
+      child: RaisedButton(
+          textColor: Colors.white,
+          color: Color(0xff0089FA),
+          child: Text(
+            title,
+            style: TextStyle(fontSize: 15),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: new BorderRadius.circular(30),
+          ),
+          elevation: 15,
+          onPressed: func()
+          // setState(() {
+          //   _loginVisibility = !_loginVisibility;
+          //   _nipVisibility = !_nipVisibility;
+          // });
+          ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,58 +95,40 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               Image.asset('assets/f_logo_RGB-Blue_144.png', width: 100),
               SizedBox(height: 120),
-              Text(
-                'Inicia sesión',
-                style: TextStyle(
-                    color: Color(0xff0089FA),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20),
-              ),
-              SizedBox(height: 5),
-              ButtonTheme(
-                height: 50,
-                child: RaisedButton(
-                  textColor: Colors.white,
-                  color: Color(0xff0089FA),
-                  child: Text(
-                    'Certificado de identidad',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(30),
-                  ),
-                  elevation: 15,
-                  onPressed: () {
-                    showDialog<String>(
-                      context: context,
-                      builder: (BuildContext context) => AlertDialog(
-                            title: const Text('Dialog title'),
-                            content: Text('Sample alert'),
-                            actions: <Widget>[
-                              FlatButton(
-                                child: Text('Cancel'),
-                                onPressed: () =>
-                                    Navigator.pop(context, 'Cancel'),
-                              ),
-                              FlatButton(
-                                child: Text('OK'),
-                                onPressed: () => Navigator.pop(context, 'OK'),
-                              ),
-                            ],
-                          ),
-                    ).then<String>((returnVal) {
-                      if (returnVal != null) {
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text('You clicked: $returnVal'),
-                          action: SnackBarAction(label: 'OK', onPressed: () {}),
-                        ));
-                      }
-                    });
-                  },
+              Visibility(
+                visible: _loginVisibility,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Inicia sesión',
+                      style: TextStyle(
+                          color: Color(0xff0089FA),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20),
+                    ),
+                    SizedBox(height: 5),
+                    roundedButton('Certificado de identidad', () {
+                      setState(() {
+                        _loginVisibility = !_loginVisibility;
+                        _nipVisibility = !_nipVisibility;
+                      });
+                    })
+                  ],
                 ),
               ),
-              PasswordField(
-                hintText: 'NIP',
+              Visibility(
+                visible: _nipVisibility,
+                child: Column(
+                  children: <Widget>[
+                    PasswordField(
+                      hintText: 'NIP',
+                    ),
+                    roundedButton('Enviar', () {
+                      //AQUI VA FUNCIONALIDAD DE API
+                    })
+                  ],
+                ),
               )
             ],
           ),
