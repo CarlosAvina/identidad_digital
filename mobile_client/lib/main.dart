@@ -1,7 +1,9 @@
 import 'dart:core' as prefix0;
 import 'dart:core';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 
 void main() => runApp(MyApp());
 
@@ -32,6 +34,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool _loginVisibility = true;
   bool _nipVisibility = false;
+
+  getFile() async {
+    // Single file path
+    String filePath;
+    // will let you pick one file path, from all extensions
+    filePath = await FilePicker.getFilePath(type: FileType.ANY);
+    // will filter and only let you pick files with svg extension
+    filePath = await FilePicker.getFilePath(
+        type: FileType.CUSTOM, fileExtension: 'pdf');
+
+    // Pick a single file directly
+    // will return a File object directly from the selected file
+    File file = await FilePicker.getFile(type: FileType.ANY);
+  }
 
   void showAlert(
       String title, String content, String cancelOption, String acceptOption) {
