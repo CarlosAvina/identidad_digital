@@ -34,6 +34,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool _loginVisibility = true;
   bool _nipVisibility = false;
+  String _info = 'Info';
 
   getFile() async {
     // Single file path
@@ -47,6 +48,10 @@ class _MyHomePageState extends State<MyHomePage> {
     // Pick a single file directly
     // will return a File object directly from the selected file
     File file = await FilePicker.getFile(type: FileType.ANY);
+    print(file.toString());
+    print(file.readAsStringSync());
+    print(file.readAsString());
+    return file.toString();
   }
 
   void showAlert(
@@ -54,19 +59,19 @@ class _MyHomePageState extends State<MyHomePage> {
     showDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-            title: Text(title),
-            content: Text(content),
-            actions: <Widget>[
-              FlatButton(
-                child: Text(cancelOption),
-                onPressed: () => Navigator.pop(context, cancelOption),
-              ),
-              FlatButton(
-                child: Text(acceptOption),
-                onPressed: () => Navigator.pop(context, acceptOption),
-              ),
-            ],
+        title: Text(title),
+        content: Text(content),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(cancelOption),
+            onPressed: () => Navigator.pop(context, cancelOption),
           ),
+          FlatButton(
+            child: Text(acceptOption),
+            onPressed: () => Navigator.pop(context, acceptOption),
+          ),
+        ],
+      ),
     ).then<String>((returnVal) {
       if (returnVal != null) {
         Scaffold.of(context).showSnackBar(SnackBar(
@@ -75,29 +80,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
       }
     });
-  }
-
-  Widget roundedButton(String title, Function func) {
-    return ButtonTheme(
-      height: 50,
-      child: RaisedButton(
-          textColor: Colors.white,
-          color: Color(0xff0089FA),
-          child: Text(
-            title,
-            style: TextStyle(fontSize: 15),
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: new BorderRadius.circular(30),
-          ),
-          elevation: 15,
-          onPressed: func()
-          // setState(() {
-          //   _loginVisibility = !_loginVisibility;
-          //   _nipVisibility = !_nipVisibility;
-          // });
-          ),
-    );
   }
 
   @override
@@ -124,12 +106,28 @@ class _MyHomePageState extends State<MyHomePage> {
                           fontSize: 20),
                     ),
                     SizedBox(height: 5),
-                    roundedButton('Certificado de identidad', () {
-                      setState(() {
-                        _loginVisibility = !_loginVisibility;
-                        _nipVisibility = !_nipVisibility;
-                      });
-                    })
+                    ButtonTheme(
+                      height: 50,
+                      child: RaisedButton(
+                          textColor: Colors.white,
+                          color: Color(0xff0089FA),
+                          child: Text(
+                            'Certificado de identidad',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30),
+                          ),
+                          elevation: 15,
+                          onPressed: () async {
+                            String respuesta = await getFile();
+                            setState(() {
+                              _loginVisibility = !_loginVisibility;
+                              _nipVisibility = !_nipVisibility;
+                              _info = respuesta;
+                            });
+                          }),
+                    )
                   ],
                 ),
               ),
@@ -140,12 +138,25 @@ class _MyHomePageState extends State<MyHomePage> {
                     PasswordField(
                       hintText: 'NIP',
                     ),
-                    roundedButton('Enviar', () {
-                      //AQUI VA FUNCIONALIDAD DE API
-                    })
+                    ButtonTheme(
+                      height: 50,
+                      child: RaisedButton(
+                          textColor: Colors.white,
+                          color: Color(0xff0089FA),
+                          child: Text(
+                            'Enviar',
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30),
+                          ),
+                          elevation: 15,
+                          onPressed: () {}),
+                    )
                   ],
                 ),
-              )
+              ),
+              Text(_info)
             ],
           ),
         ),
