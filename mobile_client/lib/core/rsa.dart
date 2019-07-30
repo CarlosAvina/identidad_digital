@@ -1,14 +1,16 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:simple_rsa/simple_rsa.dart';
 
-final publicKey = '...';
-final privateKey = '...';
+// final publicKey = '...';
+// final privateKey = '...';
+class RSA {
+  RSA({Key key});
 
-encryptJson(String encryptedJson) async {
-  final decryptedText = await decryptString(
-      encryptedJson, utf8.decode(base64.decode(privateKey)));
+  encryptJson(String encryptedJson, String nip) async {
+    return await decryptString(encryptedJson, nip);
 
-  // Test
-  // print(json == decryptedText ? 'true' : 'false');
+    // return decryptedText;
+  }
 }

@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 
+import 'core/rsa.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -35,6 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _loginVisibility = true;
   bool _nipVisibility = false;
   String _info = 'Info';
+  final _nip = TextEditingController();
 
   getFile() async {
     // Single file path
@@ -49,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // will return a File object directly from the selected file
     File file = await FilePicker.getFile(type: FileType.ANY);
     print(file.toString());
-    print(file.readAsStringSync());
+    // print(file.readAsStringSync());
     print(file.readAsString());
     return file.toString();
   }
@@ -136,6 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Column(
                   children: <Widget>[
                     PasswordField(
+                      controller: _nip,
                       hintText: 'NIP',
                     ),
                     ButtonTheme(
@@ -151,7 +155,13 @@ class _MyHomePageState extends State<MyHomePage> {
                             borderRadius: new BorderRadius.circular(30),
                           ),
                           elevation: 15,
-                          onPressed: () {}),
+                          onPressed: () async {
+                            String response =
+                                await RSA().encryptJson('JSON', _nip.text);
+                            setState(() {
+                              _info = response;
+                            });
+                          }),
                     )
                   ],
                 ),
@@ -166,15 +176,15 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class PasswordField extends StatefulWidget {
-  const PasswordField({
-    this.fieldKey,
-    this.hintText,
-    this.labelText,
-    this.helperText,
-    this.onSaved,
-    this.validator,
-    this.onFieldSubmitted,
-  });
+  const PasswordField(
+      {this.fieldKey,
+      this.hintText,
+      this.labelText,
+      this.helperText,
+      this.onSaved,
+      this.validator,
+      this.onFieldSubmitted,
+      this.controller});
 
   final Key fieldKey;
   final String hintText;
@@ -183,6 +193,7 @@ class PasswordField extends StatefulWidget {
   final FormFieldSetter<String> onSaved;
   final FormFieldValidator<String> validator;
   final ValueChanged<String> onFieldSubmitted;
+  final TextEditingController controller;
 
   @override
   _PasswordFieldState createState() => new _PasswordFieldState();
@@ -200,6 +211,7 @@ class _PasswordFieldState extends State<PasswordField> {
       onSaved: widget.onSaved,
       validator: widget.validator,
       onFieldSubmitted: widget.onFieldSubmitted,
+      controller: widget.controller,
       decoration: new InputDecoration(
           border: const UnderlineInputBorder(),
           filled: true,
